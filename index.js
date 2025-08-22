@@ -108,7 +108,7 @@ async function connectToWA() {
           auth: state,
           version
           })
-      
+
   conn.ev.on('connection.update', (update) => {
   const { connection, lastDisconnect } = update
   if (connection === 'close') {
@@ -140,6 +140,32 @@ renderLargerThumbnail: true
 }}}) 
     }
   })
+
+		
+            
+      
+//==================================================================
+
+	
+conn.ev.on("call", async(json) => {
+	  if(config.ANTI_CALL === "true" ) { 
+    	for(const id of json) {
+    		if(id.status == "offer") {
+    			if(id.isGroup == false) {
+    				await conn.sendMessage(id.from, {
+    					text: `\`CAll rejected 😪\`\n\`හිමිකරු දැන් කාර්ය බහුල බැවින් ඇමතුම ස්වයංක්‍රීයව ප්‍රතික්ෂේප විය\`n> ∂ιηυωн-χ м∂`, 
+							mentions: [id.from]
+    				});
+    				await conn.rejectCall(id.id, id.from);
+    			} else {
+    				await conn.rejectCall(id.id, id.from);
+    			}
+    		}
+    	}}
+    }); 
+	
+//==================================Welcome================================
+	
 
 conn.forwardMessage = async (jid, message, forceForward = false, options = {}) => {
             let vtype
@@ -919,6 +945,7 @@ editedMessage: {
 	      
             const ownerdata = (await axios.get('https://gist.github.com/adhi-ofc-web-arch/c5458c5af2e054770b7f737864e45e63')).data
             config.LOGO = `https://files.catbox.moe/de82e3.jpg`
+            config.FOOTER = `> ©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴋᴏᴅ ɢᴀɴɢꜱ`
             config.PAIR = ownerdata.pair
             config.NEWS = ownerdata.news
             config.API = ownerdata.api
